@@ -1,0 +1,206 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'mainapp/script.html' %}
+<div class="row" id="map-container">
+  <div class="px-0 col-12 position-relative">
+    <div id="home-map"></div>
+  </div>
+  <div class="py-2 col-12">
+    <div class="row justify-content-center">
+      <div class="col-auto">
+          <span class="pointer food">●</span>Food
+      </div>
+      <div class="col-auto">
+          <span class="pointer clothes">●</span>Clothes
+      </div>
+      <div class="col-auto">
+          <span class="pointer medical">●</span>Medical
+      </div>
+      <div class="col-auto">
+          <span class="pointer other">●</span>Other
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cards Container -->
+<div class="mt-5 container">
+  <div class="row justify-content-between">
+    <div class="col-auto">
+        <h2> Upcoming Events </h2>
+    </div>
+    <div class="col-auto float-right">
+      <button type="button" class="btn btn-primary" id="map-toggler" name="button">Hide Map</button>
+    </div>
+  </div>
+  <hr id="hrLine"/>
+  <div class="row">
+    <div class="col-lg-12 d-flex justify-content-center">
+      <ul id="portfolio-flters" class="list-group list-group-horizontal" style="background-color: black;">
+        <li class="list-group-item active-filter" data-filter="all" onClick="setCards('all')">All</li>
+        <li class="list-group-item" data-filter="food" onClick="setCards('food')">Food</li>
+        <li class="list-group-item" data-filter="clothes" onClick="setCards('clothes')">Clothes</li>
+        <li class="list-group-item" data-filter="medical" onClick="setCards('medical')">Medical</li>
+        <li class="list-group-item" data-filter="other" onClick="setCards('other')">Others</li>
+      </ul>
+    </div>
+  </div>
+    <div class="row portfolio-container">
+    {% for event in events %}
+    <div class="pt-3 col-12 col-md-6 col-lg-4 portfolio-item {{ event.type_of_project|lower }}">
+      <p id="eventType" style="display: none">{{ event.type_of_project|lower }}</p>
+      <div class="card event-card eventBlock">
+        <div class="card-header cardHeader">
+          <h3> {{ event.event_name }} </h3>
+          <div class="text-muted eventsInfo"> {{ event.event_date }} </div>
+        </div>
+        <div class="card-body cardBody">
+          <div class="row justify-content-around">
+            <div class="col-6">
+              <h5> Items </h5>
+              <p class="eventsInfo">{{ event.event_type }}</p>
+            </div>
+            <div class="col-6">
+              <h5> Place </h5>
+              <p class="eventsInfo"> {{ event.place_name }} </p>
+            </div>
+          </div>
+
+          {% if user %}
+            <div class="row justify-content-around">
+              {% if event.is_interested %}
+                <button class="btn btn-primary" onclick="window.location.href='?id={{ event.id }}'"><h5> Interested </h5></button>
+              {% else %}
+                <button class="btn btn-primary notInterestedBtn" style="background-color: #c5dff5; color: black;" onclick="window.location.href='?id={{ event.id }}'"><h5> Interested </h5></button>
+              {% endif %}
+            </div>
+          {% endif %}
+
+        </div>
+        <div class="card-footer">
+          <div class="row justify-content-between">
+            <div class="col-auto">
+              By: {{ event.event_organizer }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Add CSS for filter colors -->
+<style>
+  #portfolio-flters .list-group-item {
+    background-color: #333; /* Default background color */
+    color: #fff; /* Default text color */
+    cursor: pointer;
+  }
+
+  #portfolio-flters .list-group-item.active-filter {
+    background-color: #007bff; /* Active filter background color */
+    color: #fff; /* Active filter text color */
+  }
+
+  #portfolio-flters .list-group-item:hover {
+    background-color: #555; /* Background color on hover */
+  }
+</style>
+
+<script>
+  $(document).ready(function() {
+    $('#map-toggler').click(function() {
+      var $this = $(this);
+      $('#map-container').toggle('blind', 1000);
+
+      $this.toggleClass('hidden');
+      if ($this.hasClass('hidden'))
+        $this.html('Show on Map');
+      else
+        $this.html('Hide Map');
+    });
+  });
+</script>
+
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoiamFudXNpaSIsImEiOiJjazl6d2IzdmYxMnJsM21wazB3a2llY2lwIn0.pLRf45aHIwdJ6dypoH0qSA';
+  var map = new mapboxgl.Map({
+    container: 'home-map', // Container ID
+    style: 'mapbox://styles/mapbox/streets-v11', // Map style to use
+    center: [76.9558, 11.0168], // Coimbatore coordinates [lng, lat]
+    zoom: 10, // Starting zoom level
+  });
+
+  map.addControl(new mapboxgl.NavigationControl());
+
+  // Function to create markers
+  function createMarkers(data, markerClass) {
+    data.features.forEach(function(marker) {
+      var el = document.createElement('div');
+      el.className = markerClass;
+
+      new mapboxgl.Marker(el)
+        .setLngLat(marker.geometry.coordinates)
+        .setPopup(new mapboxgl.Popup({ offset: 25 })
+          .setHTML('<h4>' + marker.properties.title + '</h4><p> by ' + marker.properties.description + '</p>'))
+        .addTo(map);
+    });
+  }
+
+  // Convert JSON data to JavaScript objects
+  var eventsFood = JSON.parse(document.getElementById('events_food').textContent);
+  var eventsClothes = JSON.parse(document.getElementById('events_clothes').textContent);
+  var eventsMedical = JSON.parse(document.getElementById('events_medical').textContent);
+  var eventsOther = JSON.parse(document.getElementById('events_other').textContent);
+
+  // Create markers for each category
+  createMarkers(eventsFood, 'marker-food');
+  createMarkers(eventsClothes, 'marker-clothes');
+  createMarkers(eventsMedical, 'marker-medical');
+  createMarkers(eventsOther, 'marker-other');
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const cardsList = Array.from(document.querySelector(".portfolio-container").children);
+
+    function setCards(category) {
+      console.log(`Filtering for category: ${category}`); // Debugging line
+      cardsList.forEach(card => {
+        // Check class names to debug
+        console.log(`Card class names: ${card.className}`);
+        const cardsCategory = card.classList.contains(category) || category === "all";
+        console.log(`Card category: ${category}, Visible: ${cardsCategory}`); // Debugging line
+        card.style.display = cardsCategory ? "block" : "none";
+      });
+
+      // Update the active class on filter buttons
+      document.querySelectorAll('#portfolio-flters .list-group-item').forEach(item => {
+        item.classList.remove('active-filter');
+      });
+
+      // Set the active class for the selected filter
+      const activeItem = document.querySelector(`#portfolio-flters .list-group-item[data-filter="${category}"]`);
+      if (activeItem) {
+        activeItem.classList.add('active-filter');
+      }
+    }
+
+    // Initialize display
+    setCards('all');
+
+    // Add event listeners for filter buttons
+    document.querySelectorAll('#portfolio-flters .list-group-item').forEach(item => {
+      item.addEventListener('click', function() {
+        const category = this.getAttribute('data-filter');
+        setCards(category);
+      });
+    });
+  });
+</script>
+
+{% endblock content %}
+``

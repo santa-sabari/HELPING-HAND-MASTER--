@@ -1,0 +1,216 @@
+/* General Styling */
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'PT Sans', sans-serif;
+  background-color: rgb(252, 252, 252);
+}
+
+#home-map {
+  position: relative; /* Changed to relative */
+  width: 100%;
+  min-height: 400px;
+  max-height: 50%;
+}
+
+.marker-food {
+  background: green;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.marker-clothes {
+  background: #6f1d1b;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.marker-medical {
+  background: red;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.marker-other {
+  background: blue;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.mapboxgl-popup-content {
+  word-break: normal;
+}
+
+#map {
+  position: relative; /* Changed to relative */
+  top: 1em;
+  width: 90%;
+  height: 90%;
+}
+
+@media (max-width: 768px) {
+  #map,
+  #home-map {
+    width: 100%;
+    height: 50%;
+    min-height: 300px;
+  }
+}
+
+.geocoder {
+  width: 100%;
+  background-color: #000;
+}
+
+.mapboxgl-ctrl-geocoder {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.mapboxgl-popup {
+  max-width: 200px;
+}
+
+.marker {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Event Pointer */
+span.pointer {
+  padding-right: 5px;
+  align-self: center;
+}
+
+.food {
+  color: green;
+}
+
+.medical {
+  color: red;
+}
+
+.clothes {
+  color: #6f1d1b;
+}
+
+.other {
+  color: blue;
+}
+
+/* Cards */
+.section1 h2 {
+  color: #4C4E61;
+}
+
+.event-card {
+  border-radius: 10px;
+  border-top: 5px solid #549EF2;
+  box-shadow: 0 8px 17px -8px #A3A5AE;
+  background-color: #FFF;
+}
+
+.event-card .card-header,
+.event-card .card-footer {
+  background-color: transparent;
+}
+
+.dark-mode {
+  background-color: #333;
+  color: #FFF;
+}
+
+.navbar-border {
+  border-bottom: 2px solid rgb(30, 137, 207);
+  background-color: lightgrey;
+}
+
+.hrLine {
+  border: 0.5px solid rgb(30, 137, 207);
+}
+
+.darkEventBlock {
+  background-color: #262626;
+  border: 2px solid rgb(30, 137, 207);
+  border-top: 8px solid rgb(30, 137, 207);
+  color: #FFF;
+}
+
+.formBlock {
+  background-color: #262626;
+  border: 2px solid rgb(30, 137, 207);
+  border-top: 8px solid rgb(30, 137, 207);
+  border-radius: 10px;
+  color: #FFF;
+  padding-top: 10px;
+}
+
+.cardBorder {
+  border-bottom: 0.5px solid rgb(30, 137, 207);
+}
+
+.eventsInfoDark {
+  color: #bfbfbf;
+}
+
+.notInterestedBtnDark {
+  background-color: #343a40;
+  color: #FFF;
+  border: none;
+}
+
+.label {
+  position: relative;
+  margin-top: 7px;
+  background-color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 50px;
+  padding-right: 8px;
+  height: 26px;
+  width: 50px;
+}
+
+.checkbox {
+  opacity: 0;
+  position: absolute;
+}
+
+.fa-moon-o {
+  color: #f1c40f;
+  font-size: 35px;
+  margin-left: 10px;
+}
+
+.fa-sun-o {
+  color: #f39c12;
+  font-size: 35px;
+}
+
+.ball {
+  background-color: #FFF;
+  border-radius: 50%;
+  position: absolute;
+  margin-left: 2px;
+  height: 22px;
+  width: 22px;
+  transform: translateX(0px);
+  transition: transform 0.2s linear;
+}
+
+.checkbox:checked + .label .ball {
+  transform: translateX(24px);
+}

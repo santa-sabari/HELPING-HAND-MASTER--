@@ -1,0 +1,7 @@
+**/__pycache__/*
+**/migrations/*
+db.sqlite3
+do's.txt
+env.bat
+HelpingHand/.env
+venv/
